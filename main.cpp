@@ -21,8 +21,7 @@ Second:
 Name -> 
 Year -> 
 Company -> 
-Console -> 
-Version -> 
+Console ->  
 Quantity -> 
 How much it costed (By 1 individual item) -> 
 How much is going to be sold for (By 1 individual item) -> 
@@ -74,13 +73,12 @@ int main(){
     //Depending of the choise of the user is gonna call the correct function
     switch(*choice){
         case 1:
-
+            cout << "woahh" << endl;
+            purchase();
             break;
-        
         case 2:
 
             break;
-        
         case 3:
 
             break;

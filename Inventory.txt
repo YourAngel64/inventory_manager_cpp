@@ -1,0 +1,30 @@
+Name: Ola
+Year: 2007
+Company: Nintendo
+Console: Nintendo
+Quantity: 0
+Cost of purchase: 0
+Cost of selling: 0
+Sold so far: 0
+Profit so far: 0
+
+Name: ola
+Year: 2007
+Company: Nintendo
+Console: Nintendo
+Quantity: 0
+Cost of purchase: 0
+Cost of selling: 0
+Sold so far: 0
+Profit so far: 0
+
+Name: Ola
+Year: 28934
+Company: dd
+Console: ss
+Quantity: 5
+Cost of purchase: 10.5
+Cost of selling: 12.5
+Sold so far: 0
+Profit so far: 0
+
