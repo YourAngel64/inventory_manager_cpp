@@ -12,14 +12,39 @@ Inventory System Algorithm
 Algorithm Goal: Create an inventory system (at least start it). To manage an inventory of a company that sells video games
 Algorithm Blueprint:
 
--Purchase:
-Add item to inventory. Details include, Information about purchased object and price of it. And pruchased quantity
+-Purchase(kinds like writting into a file):
+We are gonna code this by somehow implementing some kind of class maybe?
+First:
+How many individual products you want to add to the inventory?
 
--Sell:
-Sell item to inventory. Details of the object being sold. Quantity being sold, etc
+Second:
+Name -> 
+Year -> 
+Company -> 
+Console -> 
+Version -> 
+Quantity -> 
+How much it costed (By 1 individual item) -> 
+How much is going to be sold for (By 1 individual item) -> 
+Solds so far:
+profit so far:
 
--print details:
-Print details on the items available, the information, quantity available, profit so far, etc
+Extra details:
+
+-Sell(kinds like reading into a file):
+First: 
+Ingress name of item. if item is found then proceed, if not then error and reset program
+
+Second:
+How many are we selling? -> if items available and can be sold then proceed
+For how much? -> then we can calculate the profit
+
+if everything goes well then SOLD SUCCESSFULLY
+
+-Check:
+Print everything in the inventory available in the order of the details of being purchased
+Maximum of 3 items per page
+ex (1/4)
 
 Details to learn in the way:
 -How to make console interactive with arrow keys
@@ -35,6 +60,7 @@ Extra details:
 -When program is functionable, will make a documentation for it and upload it to github
 -It may take u days to finish but dw cause ur learning bro
 -before starting project write DETAIL BY DETAIL of each step so you don't get lost
+-whenever basics of program is done, then we should add 2 more functions for deleting and for editing items in inventory
 */
 
 

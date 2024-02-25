@@ -4,9 +4,18 @@
 #include <iostream>
 #include <string>
 #include <cmath>
+
 using std::cout;
 using std::cin;
 using std::endl;
+
+class product{
+public:
+    
+protected:
+
+};
+
 
 //First choose what option the user wants to perform
 int* option(){
@@ -33,7 +42,7 @@ void sell(){
 
 //algorithm for third option
 void check(){
-    
+
 }
 
 #endif
