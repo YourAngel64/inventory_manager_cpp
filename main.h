@@ -9,13 +9,14 @@
 using std::cout;
 using std::cin;
 using std::endl;
+using std::string;
 
 class product{
 public:
-    std::string name;
+    string name;
     int year;
-    std::string company;
-    std::string platform;
+    string company;
+    string platform;
     int quantity;
     float purchase_cost;
     float sell_cost;
@@ -39,7 +40,7 @@ int* option(){
     return choice;
 }
 
-
+//function that deals with saving and reading inventory items
 void inventory_file(int file_mode){
     std::fstream file;
 
@@ -61,17 +62,103 @@ void inventory_file(int file_mode){
             file.open("Inventory.txt", std::ios::in);        
             break;
     }
-    
+    file.close();
 }
 
+void update(string new_info){
+    std::fstream file;
+    file.open("Inventory.txt", std::ios::in);
+    int line = 0, number_of_item, calculation, file_length = 0;
+    string x;
+
+    while(file){
+        file >> x;
+        if(x.find(purchase_product.name) == 0)
+            break;
+        if(file.eof())
+            break;
+        line++;
+    }
+
+    number_of_item = floor(line/26);
+    calculation = (line - (16 * number_of_item));
+
+    while(file){
+
+        if(file.eof()){
+            break;
+        }
+        file_length++;
+    }
+
+    cout << file_length;
+    /*
+    26 is the difference between the outputs
+    16 is the difference of the difference of goal and OP
+    EX:
+
+    Goal: (unknown)                 OP:
+    11        +17                   27 (+ 26)=
+    21        +33                   53 (+ 26)=
+    31        +49                   79 (+ 26)=
+
+    17 + 16 = 33 + 16 = 49...
+    */
+   
+   string file_change[] = {};
+   
+   while(file){
+        file >> x;
+        for(int i = 0; i < file_length; i++){
+            file_change->append(x);
+        }
+
+        if(file.eof()){break;}
+   }
+    
+
+   
+   
+    cout << file_change;
+}
 
 //Algorithm for first option
 void purchase(){
+    std::fstream file;
+    file.open("Inventory.txt", std::ios::in);
+    string x;
+    bool item_exists = false; 
 
     cout << "Enter details of the product: " << endl;
 
     cout << "Name: ";
     cin >> purchase_product.name;
+
+    while(file){
+        file >> x;
+        if(x.find(purchase_product.name) == 0)
+            item_exists = true;
+        if(file.eof())
+            break;
+    }
+
+    if(item_exists){
+        cout << "Item exists already. Want to update quantity? [yes/no]?";
+        cin >> x;
+        
+        for(int i = 0; i < x.length(); i++){
+            x[i] = std::tolower(x[i]);
+        }
+
+        if(x.compare("yes") == 0){
+            update("ola");
+        }
+        else if(x.compare("no") == 0){} //Programs continues
+        else{
+            cout << "Invalid Input"; 
+            exit(1);
+        }
+    }
 
     cout << "Year: ";
     cin >> purchase_product.year;
@@ -112,4 +199,5 @@ void sell(){
 void check(){
 
 }
+
 #endif

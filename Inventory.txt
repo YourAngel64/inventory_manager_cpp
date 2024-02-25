@@ -1,30 +1,40 @@
-Name: Ola
-Year: 2007
+Name: OOT
+Year: 1998
 Company: Nintendo
-Console: Nintendo
-Quantity: 0
-Cost of purchase: 0
-Cost of selling: 0
+Console: N64
+Quantity: 10
+Cost of purchase: 10
+Cost of selling: 15
 Sold so far: 0
 Profit so far: 0
 
-Name: ola
-Year: 2007
+Name: MM
+Year: 2000
 Company: Nintendo
-Console: Nintendo
-Quantity: 0
-Cost of purchase: 0
-Cost of selling: 0
+Console: N64
+Quantity: 19
+Cost of purchase: 20
+Cost of selling: 30
 Sold so far: 0
 Profit so far: 0
 
-Name: Ola
-Year: 28934
-Company: dd
-Console: ss
-Quantity: 5
-Cost of purchase: 10.5
-Cost of selling: 12.5
+Name: TTP
+Year: 1985
+Company: Nintendo
+Console: SN
+Quantity: 39
+Cost of purchase: 10
+Cost of selling: 15
+Sold so far: 0
+Profit so far: 0
+
+Name: TP
+Year: 2005
+Company: Nintendo
+Console: GC
+Quantity: 19
+Cost of purchase: 19.99
+Cost of selling: 25
 Sold so far: 0
 Profit so far: 0
 

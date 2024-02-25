@@ -73,7 +73,6 @@ int main(){
     //Depending of the choise of the user is gonna call the correct function
     switch(*choice){
         case 1:
-            cout << "woahh" << endl;
             purchase();
             break;
         case 2:
