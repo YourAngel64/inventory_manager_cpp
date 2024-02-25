@@ -1,6 +1,11 @@
 #include <iostream>
 #include <string>
 #include <cmath>
+#include "main.h"
+
+using std::cout;
+using std::cin;
+using std::endl;
 
 /*
 Inventory System Algorithm
@@ -32,9 +37,32 @@ Extra details:
 -before starting project write DETAIL BY DETAIL of each step so you don't get lost
 */
 
-int main(){
-    
 
+int main(){
+    int* choice = option();
+    
+    //Check user input if is 1 or 2 or 3. If input is not valid then program is gonna close
+    if(*choice == 1 || *choice == 2 || *choice == 3){}
+    else{exit(1);}
+
+    //Depending of the choise of the user is gonna call the correct function
+    switch(*choice){
+        case 1:
+
+            break;
+        
+        case 2:
+
+            break;
+        
+        case 3:
+
+            break;
+    }
+
+
+    delete choice;
+    choice = NULL;
 
     return 0;
 }

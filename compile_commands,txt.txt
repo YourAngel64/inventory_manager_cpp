@@ -1,0 +1,2 @@
+g++ -o ola.exe main.cpp main.h
+ola.exe
