@@ -47,15 +47,15 @@ void inventory_file(int file_mode){
     switch(file_mode){
         case 0: //0 for writting into the file
             file.open("Inventory.txt", std::ios::app);
-            file << "Name: " << purchase_product.name << endl;
-            file << "Year: " << purchase_product.year << endl;
-            file << "Company: " << purchase_product.company << endl;
-            file << "Console: " << purchase_product.platform << endl;
-            file << "Quantity: " << purchase_product.quantity << endl;
-            file << "Cost of purchase: " << purchase_product.purchase_cost << endl;
-            file << "Cost of selling: " << purchase_product.sell_cost << endl;
-            file << "Sold so far: " << purchase_product.sold << endl;
-            file << "Profit so far: " << purchase_product.profit << endl;
+            file << "Name:" << purchase_product.name << endl;
+            file << "Year:" << purchase_product.year << endl;
+            file << "Company:" << purchase_product.company << endl;
+            file << "Console:" << purchase_product.platform << endl;
+            file << "Quantity:" << purchase_product.quantity << endl;
+            file << "Cost_of_purchase:" << purchase_product.purchase_cost << endl;
+            file << "Cost_of_selling:" << purchase_product.sell_cost << endl;
+            file << "Sold_so_far:" << purchase_product.sold << endl;
+            file << "Profit_so_far:" << purchase_product.profit << endl;
             file << "\n";
             break;
         case 1: //1 for reading the file
@@ -66,9 +66,9 @@ void inventory_file(int file_mode){
 }
 
 void update(string new_info){
-    std::fstream file;
+    std::fstream file, file_update;
     file.open("Inventory.txt", std::ios::in);
-    int line = 0, number_of_item, calculation, file_length = 0;
+    int line = 0, number_of_item, calculation;
     string x;
 
     while(file){
@@ -83,15 +83,7 @@ void update(string new_info){
     number_of_item = floor(line/26);
     calculation = (line - (16 * number_of_item));
 
-    while(file){
 
-        if(file.eof()){
-            break;
-        }
-        file_length++;
-    }
-
-    cout << file_length;
     /*
     26 is the difference between the outputs
     16 is the difference of the difference of goal and OP
@@ -104,22 +96,54 @@ void update(string new_info){
 
     17 + 16 = 33 + 16 = 49...
     */
-   
-   string file_change[] = {};
-   
-   while(file){
+
+
+    file.close();
+    file.open("Inventory.txt", std::ios::in);
+    x = "";
+
+    file_update.open("Inventory_fast.txt", std::ios::out);
+
+    int counter = 0;
+    bool is_update_product = false, is_old_data = false;
+
+    while(file_update){
         file >> x;
-        for(int i = 0; i < file_length; i++){
-            file_change->append(x);
+
+        if(counter >= 2){
+
+            if(is_update_product == true && x.compare("Quantity:") == 0){
+                cout << "esta aka" << endl;
+                file_update << "\n" << "Quantity:" << new_info;
+                counter = 1;
+                is_update_product = false;
+                is_old_data = true;
+            }
+            else{
+                file_update << "\n";
+                file_update << x;
+                counter = 1;
+            }
+        }
+        else if(x.compare(purchase_product.name) == 0){
+            is_update_product = true;
+            file_update << x;
+            counter++;
+        } 
+        else if(is_old_data){  //Here we jump that old data we don't wanna write
+            is_old_data = false; 
+            counter++;
+        }
+        else{
+            file_update << x;
+            counter++;
         }
 
         if(file.eof()){break;}
-   }
+    }
+   
+   
     
-
-   
-   
-    cout << file_change;
 }
 
 //Algorithm for first option
@@ -151,7 +175,7 @@ void purchase(){
         }
 
         if(x.compare("yes") == 0){
-            update("ola");
+            update("64");
         }
         else if(x.compare("no") == 0){} //Programs continues
         else{
