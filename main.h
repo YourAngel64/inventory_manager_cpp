@@ -47,16 +47,15 @@ void inventory_file(int file_mode){
     switch(file_mode){
         case 0: //0 for writting into the file
             file.open("Inventory.txt", std::ios::app);
-            file << "Name:" << purchase_product.name << endl;
-            file << "Year:" << purchase_product.year << endl;
-            file << "Company:" << purchase_product.company << endl;
-            file << "Console:" << purchase_product.platform << endl;
-            file << "Quantity:" << purchase_product.quantity << endl;
-            file << "Cost_of_purchase:" << purchase_product.purchase_cost << endl;
-            file << "Cost_of_selling:" << purchase_product.sell_cost << endl;
-            file << "Sold_so_far:" << purchase_product.sold << endl;
-            file << "Profit_so_far:" << purchase_product.profit << endl;
-            file << "\n";
+            file << "Name: " << purchase_product.name << endl;
+            file << "Year: " << purchase_product.year << endl;
+            file << "Company: " << purchase_product.company << endl;
+            file << "Console: " << purchase_product.platform << endl;
+            file << "Quantity: " << purchase_product.quantity << endl;
+            file << "Cost_of_purchase: " << purchase_product.purchase_cost << endl;
+            file << "Cost_of_selling: " << purchase_product.sell_cost << endl;
+            file << "Sold_so_far: " << purchase_product.sold << endl;
+            file << "Profit_so_far: " << purchase_product.profit << endl;
             break;
         case 1: //1 for reading the file
             file.open("Inventory.txt", std::ios::in);        
@@ -113,21 +112,20 @@ void update(string new_info){
         if(counter >= 2){
 
             if(is_update_product == true && x.compare("Quantity:") == 0){
-                cout << "esta aka" << endl;
-                file_update << "\n" << "Quantity:" << new_info;
+                file_update << "\n" << "Quantity: " << new_info;
                 counter = 1;
                 is_update_product = false;
                 is_old_data = true;
             }
             else{
                 file_update << "\n";
-                file_update << x;
+                file_update << x + " ";
                 counter = 1;
             }
         }
         else if(x.compare(purchase_product.name) == 0){
             is_update_product = true;
-            file_update << x;
+            file_update << x + " ";
             counter++;
         } 
         else if(is_old_data){  //Here we jump that old data we don't wanna write
@@ -135,15 +133,41 @@ void update(string new_info){
             counter++;
         }
         else{
-            file_update << x;
+            file_update << x + " ";
             counter++;
         }
 
         if(file.eof()){break;}
     }
    
-   
+   file.close();
+   file_update.close();
+
+   file.open("Inventory.txt", std::ios::out); //now write everything into main file
+   file_update.open("Inventory_fast.txt", std::ios::in); //now read everything
+
+    x = "";
+
+    counter = 0;
     
+    while(file_update){
+        file_update >> x;
+
+        if(counter >= 2){
+            file << "\n";
+            file << x + " ";
+            counter = 1;
+        }
+        else{
+            file << x + " ";
+            counter++;
+        }
+
+        if(file_update.eof()){break;}
+    }
+
+    file_update.close();
+    file.close();
 }
 
 //Algorithm for first option
@@ -167,21 +191,26 @@ void purchase(){
     }
 
     if(item_exists){
-        cout << "Item exists already. Want to update quantity? [yes/no]?";
+        string amount;
+
+        cout << "Item exists already. Want to update quantity? [yes/no]? ";
         cin >> x;
-        
+        cout << "New quantity:";
+        cin >> amount;
+
         for(int i = 0; i < x.length(); i++){
             x[i] = std::tolower(x[i]);
         }
 
         if(x.compare("yes") == 0){
-            update("64");
+            update(amount);
+            exit(0);
         }
         else if(x.compare("no") == 0){} //Programs continues
         else{
             cout << "Invalid Input"; 
             exit(1);
-        }
+        }    
     }
 
     cout << "Year: ";
