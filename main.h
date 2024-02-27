@@ -54,8 +54,6 @@ void inventory_file(int file_mode){
             file << "Quantity: " << purchase_product.quantity << endl;
             file << "Cost_of_purchase: " << purchase_product.purchase_cost << endl;
             file << "Cost_of_selling: " << purchase_product.sell_cost << endl;
-            file << "Sold_so_far: " << purchase_product.sold << endl;
-            file << "Profit_so_far: " << purchase_product.profit << endl;
             break;
         case 1: //1 for reading the file
             file.open("Inventory.txt", std::ios::in);        
@@ -230,12 +228,6 @@ void purchase(){
 
     cout << "Cost of selling: ";
     cin >> purchase_product.sell_cost;
-
-    cout << "Sold so far: ";
-    cin >> purchase_product.sold;
-
-    cout << "Profit so far: ";
-    cin >> purchase_product.profit;
 
     inventory_file(0);
 }
