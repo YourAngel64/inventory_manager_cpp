@@ -5,6 +5,7 @@
 #include <string>
 #include <cmath>
 #include <fstream>
+#include <cstdio> // lib to delete files
 
 using std::cout;
 using std::cin;
@@ -47,6 +48,7 @@ void inventory_file(int file_mode){
     switch(file_mode){
         case 0: //0 for writting into the file
             file.open("Inventory.txt", std::ios::app);
+            file << "\n";
             file << "Name: " << purchase_product.name << endl;
             file << "Year: " << purchase_product.year << endl;
             file << "Company: " << purchase_product.company << endl;
@@ -54,6 +56,8 @@ void inventory_file(int file_mode){
             file << "Quantity: " << purchase_product.quantity << endl;
             file << "Cost_of_purchase: " << purchase_product.purchase_cost << endl;
             file << "Cost_of_selling: " << purchase_product.sell_cost << endl;
+            file <<  "Sold_so_far: " << purchase_product.sold << endl;
+            file << "profit: " << purchase_product.profit;
             break;
         case 1: //1 for reading the file
             file.open("Inventory.txt", std::ios::in);        
@@ -66,7 +70,7 @@ void update(string new_info){
     std::fstream file, file_update;
     file.open("Inventory.txt", std::ios::in);
     int line = 0, number_of_item, calculation;
-    string x;
+    string x, repeated_data_check;
 
     while(file){
         file >> x;
@@ -94,7 +98,7 @@ void update(string new_info){
     17 + 16 = 33 + 16 = 49...
     */
 
-
+   //get everything to temporary file to change values and then tranfer all back to Inventory.txt
     file.close();
     file.open("Inventory.txt", std::ios::in);
     x = "";
@@ -106,9 +110,12 @@ void update(string new_info){
 
     while(file_update){
         file >> x;
+        if(x == repeated_data_check){
+            break;
+        }
 
         if(counter >= 2){
-
+            
             if(is_update_product == true && x.compare("Quantity:") == 0){
                 file_update << "\n" << "Quantity: " << new_info;
                 counter = 1;
@@ -118,6 +125,7 @@ void update(string new_info){
             else{
                 file_update << "\n";
                 file_update << x + " ";
+                repeated_data_check = x;
                 counter = 1;
             }
         }
@@ -132,12 +140,14 @@ void update(string new_info){
         }
         else{
             file_update << x + " ";
+            repeated_data_check = x;
             counter++;
         }
-
         if(file.eof()){break;}
     }
    
+
+   //Get everything to Inventory.txt
    file.close();
    file_update.close();
 
@@ -151,20 +161,26 @@ void update(string new_info){
     while(file_update){
         file_update >> x;
 
+        if(x == repeated_data_check){
+            break;
+        }
+
         if(counter >= 2){
             file << "\n";
             file << x + " ";
+            repeated_data_check = x;
             counter = 1;
         }
         else{
             file << x + " ";
+            repeated_data_check = x;
             counter++;
-        }
-
-        if(file_update.eof()){break;}
+        
+        if(file_update.eof()){break;}}
     }
 
     file_update.close();
+    std::remove("./Inventory_fast.txt"); //delete file after use. only used to update values
     file.close();
 }
 
@@ -228,6 +244,12 @@ void purchase(){
 
     cout << "Cost of selling: ";
     cin >> purchase_product.sell_cost;
+
+    cout << "Sold so far: ";
+    cin >> purchase_product.sold;
+
+    cout << "Profit: ";
+    cin >> purchase_product.profit;
 
     inventory_file(0);
 }
