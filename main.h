@@ -4,14 +4,16 @@
 #include <iostream>
 #include <string>
 #include <cmath>
-#include <fstream>
+#include <fstream> //lib to manage the files
 #include <cstdio> // lib to delete files
 
+//Most common using
 using std::cout;
 using std::cin;
 using std::endl;
 using std::string;
 
+//Class with attributes to create the product. is public for all the functions
 class product{
 public:
     string name;
@@ -29,6 +31,7 @@ product purchase_product; //global obj created from product class that is being 
 
 
 //First choose what option the user wants to perform
+//Returns pointer to one int for the option that the user wants to perform
 int* option(){
     int* choice = new int;
 
@@ -66,23 +69,25 @@ void inventory_file(int file_mode){
     file.close();
 }
 
+//Biggest function so far
 void update(string new_info){
-    std::fstream file, file_update;
-    file.open("Inventory.txt", std::ios::in);
-    int line = 0, number_of_item, calculation;
-    string x, repeated_data_check;
+    std::fstream file, file_update; //File var
+    int counter = 0; //int vars
+    string x, repeated_data_check; // Str vars
+    bool is_update_product = false, is_old_data = false; //bool vars
 
-    while(file){
-        file >> x;
-        if(x.find(purchase_product.name) == 0)
-            break;
-        if(file.eof())
-            break;
-        line++;
-    }
+    // file.open("Inventory.txt", std::ios::in);
+    // while(file){
+    //     file >> x;
+    //     if(x.find(purchase_product.name) == 0)
+    //         break;
+    //     if(file.eof())
+    //         break;
+    //     line++;
+    // }
 
-    number_of_item = floor(line/26);
-    calculation = (line - (16 * number_of_item));
+    // number_of_item = floor(line/26);
+    // calculation = (line - (16 * number_of_item));
 
 
     /*
@@ -98,19 +103,23 @@ void update(string new_info){
     17 + 16 = 33 + 16 = 49...
     */
 
+   //Check is argument is valid as a quantity
+    try{
+        stoi(new_info);
+    }
+    catch(const std::exception& e){
+        cout << "Invalid input for quantity. Please input a number" << endl;
+    }
+    
+
+
    //get everything to temporary file to change values and then tranfer all back to Inventory.txt
-    file.close();
     file.open("Inventory.txt", std::ios::in);
-    x = "";
-
     file_update.open("Inventory_fast.txt", std::ios::out);
-
-    int counter = 0;
-    bool is_update_product = false, is_old_data = false;
 
     while(file_update){
         file >> x;
-        if(x == repeated_data_check){
+        if(x == repeated_data_check){ //checks if x is being repeated twice. if so then break
             break;
         }
 
@@ -154,8 +163,8 @@ void update(string new_info){
    file.open("Inventory.txt", std::ios::out); //now write everything into main file
    file_update.open("Inventory_fast.txt", std::ios::in); //now read everything
 
+    //make sure variables are clean before continue
     x = "";
-
     counter = 0;
     
     while(file_update){
@@ -184,18 +193,23 @@ void update(string new_info){
     file.close();
 }
 
+//Now it is time for the functions that the main function call:
+//*This functions use and call the functions above
 //Algorithm for first option
+
 void purchase(){
     std::fstream file;
-    file.open("Inventory.txt", std::ios::in);
-    string x;
+    string x, amount;;
     bool item_exists = false; 
+
+    file.open("Inventory.txt", std::ios::in);
 
     cout << "Enter details of the product: " << endl;
 
     cout << "Name: ";
     cin >> purchase_product.name;
 
+    //Check if name item is already in the inventory
     while(file){
         file >> x;
         if(x.find(purchase_product.name) == 0)
@@ -204,23 +218,26 @@ void purchase(){
             break;
     }
 
+    //if does exists then asks user if wish to change quantity. If so then update() will be called
+    //With an arguments having the new data
     if(item_exists){
-        string amount;
 
         cout << "Item exists already. Want to update quantity? [yes/no]? ";
         cin >> x;
-        cout << "New quantity:";
-        cin >> amount;
-
+        
         for(int i = 0; i < x.length(); i++){
             x[i] = std::tolower(x[i]);
         }
 
         if(x.compare("yes") == 0){
+            cout << "New quantity:";
+            cin >> amount;
             update(amount);
             exit(0);
         }
-        else if(x.compare("no") == 0){} //Programs continues
+        else if(x.compare("no") == 0){
+            exit(0);
+        } 
         else{
             cout << "Invalid Input"; 
             exit(1);
