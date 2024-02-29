@@ -273,10 +273,33 @@ void purchase(){
 
 //Algorithm for second option
 void sell(){
+    std::fstream file;
+    string x;
+    bool item_exists = false; 
 
+    file.open("Inventory.txt", std::ios::in);
 
+    cout << "Enter the name of the product to sell: " << endl;
 
-  
+    cout << "Name: ";
+    cin >> purchase_product.name;
+
+    //Check if name item is already in the inventory
+    while(file){
+        file >> x;
+        if(x.find(purchase_product.name) == 0)
+            item_exists = true;
+        if(file.eof())
+            break;
+    }
+
+    //If item does not exists, program will close
+    if(!item_exists){
+        cout << "Item does no exits, please check the name properly";    
+        exit(1);
+    }
+
+    exit(0);
 }
 
 //algorithm for third option

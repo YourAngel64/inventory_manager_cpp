@@ -76,7 +76,7 @@ int main(){
             purchase();
             break;
         case 2:
-
+            sell();
             break;
         case 3:
 
