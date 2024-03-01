@@ -12,6 +12,7 @@ using std::cout;
 using std::cin;
 using std::endl;
 using std::string;
+using std::fstream;
 
 //Class with attributes to create the product. is public for all the functions
 class product{
@@ -46,7 +47,7 @@ int* option(){
 
 //function that deals with saving and reading inventory items
 void inventory_file(int file_mode){
-    std::fstream file;
+    fstream file;
 
     switch(file_mode){
         case 0: //0 for writting into the file
@@ -71,7 +72,7 @@ void inventory_file(int file_mode){
 
 //Biggest function so far
 void update(string new_info){
-    std::fstream file, file_update; //File var
+    fstream file, file_update; //File var
     int counter = 0; //int vars
     string x, repeated_data_check; // Str vars
     bool is_update_product = false, is_old_data = false; //bool vars
@@ -193,12 +194,53 @@ void update(string new_info){
     file.close();
 }
 
+//Print simple information of the object that is about to be sold
+void sell_print_information(){
+    fstream file;
+    string x;
+    int counter = 1;
+    bool item_area = false;
+
+    file.open("Inventory.txt", std::ios::in);
+    
+    while(file){
+        file >> x;
+
+        if(x.compare(purchase_product.name) == 0){
+            cout << "--------------------------" << endl;
+            cout << "Name: ";
+            item_area = true;
+        }
+
+        if(item_area){
+            if(x.compare("Name:") == 0){ //if prints Name: again means that we dont need this anymore
+                cout << "\n";
+                cout << "--------------------------" << endl;
+                break;
+            }
+            else if(counter == 2){
+                cout << "\n";
+                cout << x;
+                counter = 1;
+            }
+            else{
+                cout << x;
+                counter++;
+            }
+        }
+
+        if(file.eof()){break;}
+    }
+
+    file.close();
+}
+
 //Now it is time for the functions that the main function call:
 //*This functions use and call the functions above
 //Algorithm for first option
 
 void purchase(){
-    std::fstream file;
+    fstream file;
     string x, amount;;
     bool item_exists = false; 
 
@@ -273,7 +315,7 @@ void purchase(){
 
 //Algorithm for second option
 void sell(){
-    std::fstream file;
+    fstream file;
     string x;
     bool item_exists = false; 
 
@@ -299,7 +341,8 @@ void sell(){
         exit(1);
     }
 
-    exit(0);
+    sell_print_information();
+    
 }
 
 //algorithm for third option
