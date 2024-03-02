@@ -235,6 +235,127 @@ void sell_print_information(){
     file.close();
 }
 
+void sell_object(int amount){
+    fstream file, file_update; //File var
+    int counter = 0, old_amount; //int vars
+    string x, repeated_data_check; // Str vars
+    bool is_update_product = false, is_old_data = false, is_quantity = false; //bool vars
+    
+   //get everything to temporary file to change values and then tranfer all back to Inventory.txt
+    file.open("Inventory.txt", std::ios::in);
+
+    while(file){
+        file >> x;
+
+        if(x.compare(purchase_product.name) == 0){
+            is_update_product = true;
+        }
+        else if(is_update_product && x.compare("Quantity:") == 0){
+            is_quantity = true;
+        }
+        
+        file >> x;
+        if(is_update_product && is_quantity){
+            try{
+                cout << x;
+                old_amount = stoi(x);
+            }
+            catch(const std::exception& e){
+                cout << "Retrive data failed";
+                exit(1);
+            }
+            
+        }
+
+        if(file.eof()){break;}
+    }
+
+    file.close();
+
+    file.open("Inventory.txt", std::ios::in);
+    file_update.open("Inventory_fast.txt", std::ios::out);
+
+    is_update_product = false;
+    is_quantity = false;
+    x = "";
+    amount = amount - old_amount;
+
+    while(file_update){
+        file >> x;
+        if(x == repeated_data_check){ //checks if x is being repeated twice. if so then break
+            break;
+        }
+
+        if(counter >= 2){
+            
+            if(is_update_product == true && x.compare("Quantity:") == 0){
+                file_update << "\n" << "Quantity: " << amount;
+                counter = 1;
+                is_update_product = false;
+                is_old_data = true;
+            }
+            else{
+                file_update << "\n";
+                file_update << x + " ";
+                repeated_data_check = x;
+                counter = 1;
+            }
+        }
+        else if(x.compare(purchase_product.name) == 0){
+            is_update_product = true;
+            file_update << x + " ";
+            counter++;
+        } 
+        else if(is_old_data){  //Here we jump that old data we don't wanna write
+            is_old_data = false; 
+            counter++;
+        }
+        else{
+            file_update << x + " ";
+            repeated_data_check = x;
+            counter++;
+        }
+        if(file.eof()){break;}
+    }
+   
+
+   //Get everything to Inventory.txt
+   file.close();
+   file_update.close();
+
+   file.open("Inventory.txt", std::ios::out); //now write everything into main file
+   file_update.open("Inventory_fast.txt", std::ios::in); //now read everything
+
+    //make sure variables are clean before continue
+    x = "";
+    counter = 0;
+    
+    while(file_update){
+        file_update >> x;
+
+        if(x == repeated_data_check){
+            break;
+        }
+
+        if(counter >= 2){
+            file << "\n";
+            file << x + " ";
+            repeated_data_check = x;
+            counter = 1;
+        }
+        else{
+            file << x + " ";
+            repeated_data_check = x;
+            counter++;
+        
+        if(file_update.eof()){break;}}
+    }
+
+    file_update.close();
+    std::remove("./Inventory_fast.txt"); //delete file after use. only used to update values
+    file.close();
+
+}
 //Now it is time for the functions that the main function call:
 //*This functions use and call the functions above
 //Algorithm for first option
@@ -316,7 +437,8 @@ void purchase(){
 //Algorithm for second option
 void sell(){
     fstream file;
-    string x;
+    string x, amount;
+    int amount_int;
     bool item_exists = false; 
 
     file.open("Inventory.txt", std::ios::in);
@@ -342,6 +464,20 @@ void sell(){
     }
 
     sell_print_information();
+
+    cout << "How many you want to sell?" << endl;
+    cin >> amount;
+
+    //Check if input is valid
+    try{
+        amount_int = stoi(amount);
+    }
+    catch(const std::exception& e){
+        cout << "Invalid input. Please input a number" << endl;
+        exit(1);
+    }
+    
+    sell_object(amount_int);
     
 }
 
