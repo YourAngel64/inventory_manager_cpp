@@ -6,6 +6,7 @@
 #include <cmath>
 #include <fstream> //lib to manage the files
 #include <cstdio> // lib to delete files
+#include "file_functions.h" //function to deal with these pesky files
 
 //Most common using
 using std::cout;
@@ -46,151 +47,21 @@ int* option(){
 }
 
 //function that deals with saving and reading inventory items
-void inventory_file(int file_mode){
+void inventory_file(){
     fstream file;
+    file = use_file("Inventory.txt", "read");
 
-    switch(file_mode){
-        case 0: //0 for writting into the file
-            file.open("Inventory.txt", std::ios::app);
-            file << "\n";
-            file << "Name: " << purchase_product.name << endl;
-            file << "Year: " << purchase_product.year << endl;
-            file << "Company: " << purchase_product.company << endl;
-            file << "Console: " << purchase_product.platform << endl;
-            file << "Quantity: " << purchase_product.quantity << endl;
-            file << "Cost_of_purchase: " << purchase_product.purchase_cost << endl;
-            file << "Cost_of_selling: " << purchase_product.sell_cost << endl;
-            file <<  "Sold_so_far: " << purchase_product.sold << endl;
-            file << "profit: " << purchase_product.profit;
-            break;
-        case 1: //1 for reading the file
-            file.open("Inventory.txt", std::ios::in);        
-            break;
-    }
-    file.close();
-}
-
-//Biggest function so far
-void update(string new_info){
-    fstream file, file_update; //File var
-    int counter = 0; //int vars
-    string x, repeated_data_check; // Str vars
-    bool is_update_product = false, is_old_data = false; //bool vars
-
-    // file.open("Inventory.txt", std::ios::in);
-    // while(file){
-    //     file >> x;
-    //     if(x.find(purchase_product.name) == 0)
-    //         break;
-    //     if(file.eof())
-    //         break;
-    //     line++;
-    // }
-
-    // number_of_item = floor(line/26);
-    // calculation = (line - (16 * number_of_item));
-
-
-    /*
-    26 is the difference between the outputs
-    16 is the difference of the difference of goal and OP
-    EX:
-
-    Goal: (unknown)                 OP:
-    11        +17                   27 (+ 26)=
-    21        +33                   53 (+ 26)=
-    31        +49                   79 (+ 26)=
-
-    17 + 16 = 33 + 16 = 49...
-    */
-
-   //Check is argument is valid as a quantity
-    try{
-        stoi(new_info);
-    }
-    catch(const std::exception& e){
-        cout << "Invalid input for quantity. Please input a number" << endl;
-    }
+    file << "\n";
+    file << "Name: " << purchase_product.name << endl;
+    file << "Year: " << purchase_product.year << endl;
+    file << "Company: " << purchase_product.company << endl;
+    file << "Console: " << purchase_product.platform << endl;
+    file << "Quantity: " << purchase_product.quantity << endl;
+    file << "Cost_of_purchase: " << purchase_product.purchase_cost << endl;
+    file << "Cost_of_selling: " << purchase_product.sell_cost << endl;
+    file <<  "Sold_so_far: " << purchase_product.sold << endl;
+    file << "profit: " << purchase_product.profit;
     
-
-
-   //get everything to temporary file to change values and then tranfer all back to Inventory.txt
-    file.open("Inventory.txt", std::ios::in);
-    file_update.open("Inventory_fast.txt", std::ios::out);
-
-    while(file_update){
-        file >> x;
-        if(x == repeated_data_check){ //checks if x is being repeated twice. if so then break
-            break;
-        }
-
-        if(counter >= 2){
-            
-            if(is_update_product == true && x.compare("Quantity:") == 0){
-                file_update << "\n" << "Quantity: " << new_info;
-                counter = 1;
-                is_update_product = false;
-                is_old_data = true;
-            }
-            else{
-                file_update << "\n";
-                file_update << x + " ";
-                repeated_data_check = x;
-                counter = 1;
-            }
-        }
-        else if(x.compare(purchase_product.name) == 0){
-            is_update_product = true;
-            file_update << x + " ";
-            counter++;
-        } 
-        else if(is_old_data){  //Here we jump that old data we don't wanna write
-            is_old_data = false; 
-            counter++;
-        }
-        else{
-            file_update << x + " ";
-            repeated_data_check = x;
-            counter++;
-        }
-        if(file.eof()){break;}
-    }
-   
-
-   //Get everything to Inventory.txt
-   file.close();
-   file_update.close();
-
-   file.open("Inventory.txt", std::ios::out); //now write everything into main file
-   file_update.open("Inventory_fast.txt", std::ios::in); //now read everything
-
-    //make sure variables are clean before continue
-    x = "";
-    counter = 0;
-    
-    while(file_update){
-        file_update >> x;
-
-        if(x == repeated_data_check){
-            break;
-        }
-
-        if(counter >= 2){
-            file << "\n";
-            file << x + " ";
-            repeated_data_check = x;
-            counter = 1;
-        }
-        else{
-            file << x + " ";
-            repeated_data_check = x;
-            counter++;
-        
-        if(file_update.eof()){break;}}
-    }
-
-    file_update.close();
-    std::remove("./Inventory_fast.txt"); //delete file after use. only used to update values
     file.close();
 }
 
@@ -201,7 +72,7 @@ void sell_print_information(){
     int counter = 1;
     bool item_area = false;
 
-    file.open("Inventory.txt", std::ios::in);
+    file = use_file("Inventory.txt", "read");
     
     while(file){
         file >> x;
@@ -237,122 +108,23 @@ void sell_print_information(){
 
 //Whenever object is sold, will update: Quantity, sold_so_far and profit
 void sell_object(int amount){
-    fstream file, file_update; //File var
     int counter = 0, old_amount = 0, sold_so_far = 0, profit = 0, sell_price = 0; //int vars
-    string x, repeated_data_check; // Str vars
-    bool is_update_product = false, is_old_data = false, is_quantity = false, is_sold_so_far = false, is_profit = false, is_sell_price = false; //bool vars
-    
-   //get everything to temporary file to change values and then tranfer all back to Inventory.txt
-    file.open("Inventory.txt", std::ios::in);
-
-    //Quantity:
-    while(file){
-        file >> x;
-
-        if(x.compare(purchase_product.name) == 0){
-            is_update_product = true;
-        }
-        else if(is_update_product && x.compare("Quantity:") == 0){
-            file >> x;
-            is_quantity = true;
-        }
         
-        if(is_update_product && is_quantity){
-            old_amount = stoi(x);
-            is_quantity = false;
-            is_update_product = false;
-            break;
-        }
-    
-        if(file.eof()){break;}
-    }
-
-    file.close();
-    file.open("Inventory.txt", std::ios::in);
+    //Get quantity:
+    old_amount = get_data(use_file("Inventory.txt", "read"), purchase_product.name, "Quantity:");
 
     //Sold_so_far:
-    while(file){
-        file >> x;
-
-        if(x.compare(purchase_product.name) == 0){
-            is_update_product = true;
-        }
-        else if(is_update_product && x.compare("Sold_so_far:") == 0){
-            file >> x;
-            is_sold_so_far = true;
-        }
-        
-        if(is_update_product && is_sold_so_far){
-            sold_so_far = stoi(x);
-            is_sold_so_far = false;
-            is_update_product = false;
-            break;    
-        }
-
-        if(file.eof()){break;}
-    }
-
-    file.close();
-    file.open("Inventory.txt", std::ios::in);
-
+    sold_so_far = get_data(use_file("Inventory.txt", "read"), purchase_product.name, "Sold_so_far:");
+    
     //profit:
-    while(file){
-        file >> x;
-
-        if(x.compare(purchase_product.name) == 0){
-            is_update_product = true;
-        }
-        else if(is_update_product && x.compare("profit:") == 0){
-            file >> x;
-            is_profit = true;
-        }
-        
-        if(is_update_product && is_profit){
-            profit = stoi(x);
-            is_profit = false;
-            is_update_product = false;    
-            break;
-        }
-
-        if(file.eof()){break;}
-    }
-
-    file.close();
-    file.open("Inventory.txt", std::ios::in);
+    profit = get_data(use_file("Inventory.txt", "read"), purchase_product.name, "profit:");
+    
 
     //Cost_of_selling //sell_cost:
-    while(file){
-        file >> x;
+    sell_price = get_data(use_file("Inventory.txt", "read"), purchase_product.name, "Cost_of_selling:");
 
-        if(x.compare(purchase_product.name) == 0){
-            is_update_product = true;
-        }
-        else if(is_update_product && x.compare("Cost_of_selling:") == 0){
-            file >> x;
-            is_sell_price = true;
-        }
-        
-        if(is_update_product && is_sell_price){
-            sell_price = stoi(x);
-            is_sell_price = false;
-            is_update_product = false;    
-            break;
-        }
-
-        if(file.eof()){break;}
-    }
-
-    file.close();
-    file.open("Inventory.txt", std::ios::in);
-    file_update.open("Inventory_fast.txt", std::ios::out);
-
-    is_update_product = false;
-    is_quantity = false;
-    is_profit = false;
-    is_sold_so_far = false;
 
     //variables to update document
-    x = "";
     old_amount -= amount;
     sold_so_far += amount;
     profit = (sell_price * amount) + profit;
@@ -362,90 +134,9 @@ void sell_object(int amount){
         exit(1);
     }
 
-    while(file_update){
-        file >> x;
-        if(x == repeated_data_check){ //checks if x is being repeated twice. if so then break
-            break;
-        }
-
-        if(counter >= 2){
-            
-            if(is_update_product == true && x.compare("Quantity:") == 0){
-                file_update << "\n" << "Quantity: " << old_amount;
-                counter = 1;
-                is_old_data = true;
-            }
-            else if(is_update_product == true && x.compare("Sold_so_far:") == 0){
-                file_update << "\n" << "Sold_so_far: " << sold_so_far;
-                counter = 1;
-                is_old_data = true;
-            }
-            else if(is_update_product == true && x.compare("profit:") == 0){
-                file_update << "\n" << "profit: " << profit;
-                counter = 1;
-                is_update_product = false;
-                is_old_data = true;
-            }
-            else{
-                file_update << "\n";
-                file_update << x + " ";
-                repeated_data_check = x;
-                counter = 1;
-            }
-        }
-        else if(x.compare(purchase_product.name) == 0){
-            is_update_product = true;
-            file_update << x + " ";
-            counter++;
-        } 
-        else if(is_old_data){  //Here we jump that old data we don't wanna write
-            is_old_data = false; 
-            counter++;
-        }
-        else{
-            file_update << x + " ";
-            repeated_data_check = x;
-            counter++;
-        }
-        if(file.eof()){break;}
-    }
-   
-
-   //Get everything to Inventory.txt
-   file.close();
-   file_update.close();
-
-   file.open("Inventory.txt", std::ios::out); //now write everything into main file
-   file_update.open("Inventory_fast.txt", std::ios::in); //now read everything
-
-    //make sure variables are clean before continue
-    x = "";
-    counter = 0;
-    
-    while(file_update){
-        file_update >> x;
-
-        if(x == repeated_data_check){
-            break;
-        }
-
-        if(counter >= 2){
-            file << "\n";
-            file << x + " ";
-            repeated_data_check = x;
-            counter = 1;
-        }
-        else{
-            file << x + " ";
-            repeated_data_check = x;
-            counter++;
-        
-        if(file_update.eof()){break;}}
-    }
-
-    file_update.close();
-    std::remove("./Inventory_fast.txt"); //delete file after use. only used to update values
-    file.close();
+    update_data(use_file("Inventory.txt", "read"), use_file("Inventory_fast.txt", "write"), purchase_product.name , "Quantity:", old_amount);
+    update_data(use_file("Inventory.txt", "read"), use_file("Inventory_fast.txt", "write"), purchase_product.name , "Sold_so_far:", sold_so_far);
+    update_data(use_file("Inventory.txt", "read"), use_file("Inventory_fast.txt", "write"), purchase_product.name , "profit:", profit);
 
 }
 //Now it is time for the functions that the main function call:
@@ -454,10 +145,11 @@ void sell_object(int amount){
 
 void purchase(){
     fstream file;
-    string x, amount;;
+    string x, amount;
+    int amount_int;
     bool item_exists = false; 
 
-    file.open("Inventory.txt", std::ios::in);
+    file = use_file("Inventory.txt", "read");
 
     cout << "Enter details of the product: " << endl;
 
@@ -487,7 +179,15 @@ void purchase(){
         if(x.compare("yes") == 0){
             cout << "New quantity:";
             cin >> amount;
-            update(amount);
+
+            try{
+                amount_int = stoi(amount);
+            }
+            catch(const std::exception& e){
+                cout << "Invalid new amount. Please input a number" << endl;
+            }
+            
+            update_data(use_file("Inventory.txt", "read"), use_file("Inventory_fast.txt", "write"), purchase_product.name , "Quantity:", amount_int);
             exit(0);
         }
         else if(x.compare("no") == 0){
@@ -523,7 +223,7 @@ void purchase(){
     cout << "Profit: ";
     cin >> purchase_product.profit;
 
-    inventory_file(0);
+    inventory_file();
 }
 
 //Algorithm for second option
@@ -533,7 +233,7 @@ void sell(){
     int amount_int;
     bool item_exists = false; 
 
-    file.open("Inventory.txt", std::ios::in);
+    file = use_file("Inventory.txt", "read");
 
     cout << "Enter the name of the product to sell: " << endl;
 
