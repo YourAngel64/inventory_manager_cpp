@@ -237,7 +237,7 @@ void sell_print_information(){
 
 void sell_object(int amount){
     fstream file, file_update; //File var
-    int counter = 0, old_amount; //int vars
+    int counter = 0, old_amount = 0; //int vars
     string x, repeated_data_check; // Str vars
     bool is_update_product = false, is_old_data = false, is_quantity = false; //bool vars
     
@@ -251,20 +251,15 @@ void sell_object(int amount){
             is_update_product = true;
         }
         else if(is_update_product && x.compare("Quantity:") == 0){
+            file >> x;
             is_quantity = true;
         }
         
-        file >> x;
         if(is_update_product && is_quantity){
-            try{
-                cout << x;
-                old_amount = stoi(x);
-            }
-            catch(const std::exception& e){
-                cout << "Retrive data failed";
-                exit(1);
-            }
-            
+            old_amount = stoi(x);
+            is_quantity = false;    
+            is_update_product = false;
+            break;
         }
 
         if(file.eof()){break;}
@@ -278,7 +273,9 @@ void sell_object(int amount){
     is_update_product = false;
     is_quantity = false;
     x = "";
-    amount = amount - old_amount;
+    old_amount -= amount;
+    
+    
 
     while(file_update){
         file >> x;
@@ -289,7 +286,7 @@ void sell_object(int amount){
         if(counter >= 2){
             
             if(is_update_product == true && x.compare("Quantity:") == 0){
-                file_update << "\n" << "Quantity: " << amount;
+                file_update << "\n" << "Quantity: " << old_amount;
                 counter = 1;
                 is_update_product = false;
                 is_old_data = true;

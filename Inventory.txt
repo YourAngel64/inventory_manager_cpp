@@ -2,7 +2,7 @@ Name: mario_ds
 Year: 2006 
 Company: Nintendo 
 Console: DS 
-Quantity: 11 
+Quantity: 6 
 Cost_of_purchase: 19.99 
 Cost_of_selling: 10 
 Sold_so_far: 0 
@@ -29,7 +29,7 @@ Name: popo
 Year: 1900 
 Company: goya 
 Console: nevera 
-Quantity: 99 
+Quantity: 8 
 Cost_of_purchase: 100 
 Cost_of_selling: 500 
 Sold_so_far: 0 
