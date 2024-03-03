@@ -65,47 +65,6 @@ void inventory_file(){
     file.close();
 }
 
-//Print simple information of the object that is about to be sold
-void sell_print_information(){
-    fstream file;
-    string x;
-    int counter = 1;
-    bool item_area = false;
-
-    file = use_file("Inventory.txt", "read");
-    
-    while(file){
-        file >> x;
-
-        if(x.compare(purchase_product.name) == 0){
-            cout << "--------------------------" << endl;
-            cout << "Name: ";
-            item_area = true;
-        }
-
-        if(item_area){
-            if(x.compare("Name:") == 0){ //if prints Name: again means that we dont need this anymore
-                cout << "\n";
-                cout << "--------------------------" << endl;
-                break;
-            }
-            else if(counter == 2){
-                cout << "\n";
-                cout << x;
-                counter = 1;
-            }
-            else{
-                cout << x;
-                counter++;
-            }
-        }
-
-        if(file.eof()){break;}
-    }
-
-    file.close();
-}
-
 //Whenever object is sold, will update: Quantity, sold_so_far and profit
 void sell_object(int amount){
     int counter = 0, old_amount = 0, sold_so_far = 0, profit = 0, sell_price = 0; //int vars
@@ -144,12 +103,9 @@ void sell_object(int amount){
 //Algorithm for first option
 
 void purchase(){
-    fstream file;
     string x, amount;
     int amount_int;
-    bool item_exists = false; 
-
-    file = use_file("Inventory.txt", "read");
+    bool item_exists_bool = false; 
 
     cout << "Enter details of the product: " << endl;
 
@@ -157,18 +113,12 @@ void purchase(){
     cin >> purchase_product.name;
 
     //Check if name item is already in the inventory
-    while(file){
-        file >> x;
-        if(x.find(purchase_product.name) == 0)
-            item_exists = true;
-        if(file.eof())
-            break;
-    }
+    item_exists_bool = item_exists(purchase_product.name);
 
     //if does exists then asks user if wish to change quantity. If so then update() will be called
     //With an arguments having the new data
-    if(item_exists){
-
+    if(item_exists_bool){
+        print_one(purchase_product.name);
         cout << "Item exists already. Want to update quantity? [yes/no]? ";
         cin >> x;
         
@@ -228,34 +178,24 @@ void purchase(){
 
 //Algorithm for second option
 void sell(){
-    fstream file;
-    string x, amount;
+    string amount;
     int amount_int;
-    bool item_exists = false; 
-
-    file = use_file("Inventory.txt", "read");
+    bool item_exists_bool = false; 
 
     cout << "Enter the name of the product to sell: " << endl;
 
     cout << "Name: ";
     cin >> purchase_product.name;
 
-    //Check if name item is already in the inventory
-    while(file){
-        file >> x;
-        if(x.find(purchase_product.name) == 0)
-            item_exists = true;
-        if(file.eof())
-            break;
-    }
+    item_exists_bool = item_exists(purchase_product.name);
 
     //If item does not exists, program will close
-    if(!item_exists){
+    if(!item_exists_bool){
         cout << "Item does no exits, please check the name properly";    
         exit(1);
     }
 
-    sell_print_information();
+    print_one(purchase_product.name);
 
     cout << "How many you want to sell?" << endl;
     cin >> amount;
@@ -275,6 +215,39 @@ void sell(){
 
 //algorithm for third option
 void check(){
+    string option;
+    bool item_exists_bool = false;
+
+    cout << "Want to check everything in the inventory or just one specific object? [all/one]" << endl;
+    cin >> option;
+
+    //convert it into all lower case just in case
+    for(int i = 0; i < option.length(); i++){
+            option[i] = std::tolower(option[i]);
+    }
+
+    if(option.compare("all") == 0){
+
+    }
+    else if(option.compare("one") == 0){
+        cout << "Please input the name of the object you wish to check:";
+        cin >> purchase_product.name;
+
+        item_exists_bool = item_exists(purchase_product.name);
+
+        //If item does not exists, program will close
+        if(!item_exists_bool){
+            cout << "Item does no exits, please check the name properly";    
+            exit(1);
+        }
+
+        print_one(purchase_product.name);
+    }
+    else{
+        cout << "Invalid Input. Please type 'all' or 'one' " << endl;
+        exit(1);
+    }
+
 
 }
 

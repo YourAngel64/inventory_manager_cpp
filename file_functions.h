@@ -76,12 +76,21 @@ int get_data(fstream file, string name_of_product, string area_of_data){
     return data;
 }
 
+/*
+Updates data on the file my moving everything to a temporaly file and then moving everything back
+to the original file. It does both because its easier like this lmao
+1st arg: fstream file - Base file
+2nd arg: fstream file_update - temporary file to update the files
+3rd arg: string product_name - name of the product in which we are going to perform the action to
+4th arg: string area - area of the product in whcih we are going to change EX: "Quantity:"
+5th arg: int new_data - new data that is going to be replaced by
+*/
 void update_data(fstream file, fstream file_update, string product_name, string area, int new_data){
     string x, repeated_data_check;
     int counter = 0;
     bool is_update_product = false, is_old_data = false;
 
-
+    //step 1: move everything to temporal file by changing the values we want to change in the area we want to change
     while(file_update){
         file >> x;
         if(x == repeated_data_check){ //checks if x is being repeated twice. if so then break
@@ -120,6 +129,7 @@ void update_data(fstream file, fstream file_update, string product_name, string 
         if(file.eof()){break;}
     }
 
+    //Close and open all files. Now we are going to write to file and read from file_update
     file = use_file("Inventory.txt", "write");
     file_update = use_file("Inventory_fast.txt", "read");
 
@@ -127,6 +137,7 @@ void update_data(fstream file, fstream file_update, string product_name, string 
     x = "";
     counter = 0;
     
+    //step 2: move everything back to main file
     while(file_update){
         file_update >> x;
 
@@ -148,10 +159,70 @@ void update_data(fstream file, fstream file_update, string product_name, string 
         if(file_update.eof()){break;}}
     }
 
+    //close all files and also removing temporal file cause we don't need it no more
     file_update.close();
     std::remove("./Inventory_fast.txt"); //delete file after use. only used to update values
 
     file.close();
 }
 
+bool item_exists(string product_name){
+    fstream file = use_file("Inventory.txt", "read");
+    string x;
+    bool item_exists_bool = false;
+
+    while(file){
+        file >> x;
+        if(x.find(product_name) == 0)
+            item_exists_bool = true;
+        if(file.eof())
+            break;
+    }
+
+    return item_exists_bool;
+}
+
+void print_one(string product_name){
+    fstream file;
+    string x;
+    int counter = 1;
+    bool item_area = false;
+
+    file = use_file("Inventory.txt", "read");
+    
+    while(file){
+        file >> x;
+
+        if(x.compare(product_name) == 0){
+            cout << "--------------------------" << endl;
+            cout << "Name: ";
+            item_area = true;
+        }
+
+        if(item_area){
+            if(x.compare("Name:") == 0){ //if prints Name: again means that we dont need this anymore
+                cout << "\n";
+                cout << "--------------------------" << endl;
+                break;
+            }
+            else if(counter == 2){
+                cout << "\n";
+                cout << x;
+                counter = 1;
+            }
+            else{
+                cout << x;
+                counter++;
+            }
+        }
+
+        if(file.eof()){break;}
+    }
+
+    file.close();
+}
+
+void print_all(){
+    
+}
 #endif

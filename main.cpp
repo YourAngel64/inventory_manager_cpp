@@ -79,7 +79,7 @@ int main(){
             sell();
             break;
         case 3:
-
+            check();
             break;
     }
 
