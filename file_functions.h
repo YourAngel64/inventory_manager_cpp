@@ -223,6 +223,49 @@ void print_one(string product_name){
 }
 
 void print_all(){
+    fstream file = use_file("Inventory.txt", "read");
+    int counter = 0, number_of_item = 1;
+    string x, repeated_data;
+
+    while(file){
+        file >> x;
+        if(x == repeated_data){
+            break;
+        }
+
+        if(x.compare("Name:") == 0){ //if prints Name: again means that we dont need this anymore
+            if(number_of_item == 1){
+                cout << number_of_item << ")" << endl;
+                cout << x;
+                repeated_data = x;
+                number_of_item++;
+                counter++;
+            }
+            else{
+                cout << "\n";
+                cout << "\n";
+                cout << number_of_item << ")" << endl;
+                cout << x;
+                repeated_data = x;
+                counter = 1;
+                number_of_item++;
+            }
+        }
+        else if(counter == 2){
+            cout << "\n";
+            cout << x;
+            repeated_data = x;
+            counter = 1;
+        }
+        else{
+            cout << x;
+            repeated_data = x;
+            counter++;
+        }
     
+
+        if(file.eof()){break;}
+    }
+
 }
 #endif

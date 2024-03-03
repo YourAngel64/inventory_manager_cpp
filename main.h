@@ -227,7 +227,7 @@ void check(){
     }
 
     if(option.compare("all") == 0){
-
+        print_all();
     }
     else if(option.compare("one") == 0){
         cout << "Please input the name of the object you wish to check:";
