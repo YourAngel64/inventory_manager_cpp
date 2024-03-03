@@ -235,16 +235,17 @@ void sell_print_information(){
     file.close();
 }
 
-//Whenever object is sold, it will substract to quantity
+//Whenever object is sold, will update: Quantity, sold_so_far and profit
 void sell_object(int amount){
     fstream file, file_update; //File var
-    int counter = 0, old_amount = 0; //int vars
+    int counter = 0, old_amount = 0, sold_so_far = 0, profit = 0, sell_price = 0; //int vars
     string x, repeated_data_check; // Str vars
-    bool is_update_product = false, is_old_data = false, is_quantity = false; //bool vars
+    bool is_update_product = false, is_old_data = false, is_quantity = false, is_sold_so_far = false, is_profit = false, is_sell_price = false; //bool vars
     
    //get everything to temporary file to change values and then tranfer all back to Inventory.txt
     file.open("Inventory.txt", std::ios::in);
 
+    //Quantity:
     while(file){
         file >> x;
 
@@ -258,8 +259,58 @@ void sell_object(int amount){
         
         if(is_update_product && is_quantity){
             old_amount = stoi(x);
-            is_quantity = false;    
+            is_quantity = false;
             is_update_product = false;
+            break;
+        }
+    
+        if(file.eof()){break;}
+    }
+
+    file.close();
+    file.open("Inventory.txt", std::ios::in);
+
+    //Sold_so_far:
+    while(file){
+        file >> x;
+
+        if(x.compare(purchase_product.name) == 0){
+            is_update_product = true;
+        }
+        else if(is_update_product && x.compare("Sold_so_far:") == 0){
+            file >> x;
+            is_sold_so_far = true;
+        }
+        
+        if(is_update_product && is_sold_so_far){
+            sold_so_far = stoi(x);
+            is_sold_so_far = false;
+            is_update_product = false;
+            break;    
+        }
+
+        if(file.eof()){break;}
+    }
+
+    file.close();
+    file.open("Inventory.txt", std::ios::in);
+
+    //profit:
+    while(file){
+        file >> x;
+
+        if(x.compare(purchase_product.name) == 0){
+            is_update_product = true;
+        }
+        else if(is_update_product && x.compare("profit:") == 0){
+            file >> x;
+            is_profit = true;
+        }
+        
+        if(is_update_product && is_profit){
+            profit = stoi(x);
+            is_profit = false;
+            is_update_product = false;    
             break;
         }
 
@@ -267,15 +318,45 @@ void sell_object(int amount){
     }
 
     file.close();
+    file.open("Inventory.txt", std::ios::in);
 
+    //Cost_of_selling //sell_cost:
+    while(file){
+        file >> x;
+
+        if(x.compare(purchase_product.name) == 0){
+            is_update_product = true;
+        }
+        else if(is_update_product && x.compare("Cost_of_selling:") == 0){
+            file >> x;
+            is_sell_price = true;
+        }
+        
+        if(is_update_product && is_sell_price){
+            sell_price = stoi(x);
+            is_sell_price = false;
+            is_update_product = false;    
+            break;
+        }
+
+        if(file.eof()){break;}
+    }
+
+    file.close();
     file.open("Inventory.txt", std::ios::in);
     file_update.open("Inventory_fast.txt", std::ios::out);
 
     is_update_product = false;
     is_quantity = false;
+    is_profit = false;
+    is_sold_so_far = false;
+
+    //variables to update document
     x = "";
     old_amount -= amount;
-    
+    sold_so_far += amount;
+    profit = (sell_price * amount) + profit;
+
     if(old_amount < 0){
         cout << "To sell such quantity is not possible. Not enough" << endl;
         exit(1);
@@ -291,6 +372,16 @@ void sell_object(int amount){
             
             if(is_update_product == true && x.compare("Quantity:") == 0){
                 file_update << "\n" << "Quantity: " << old_amount;
+                counter = 1;
+                is_old_data = true;
+            }
+            else if(is_update_product == true && x.compare("Sold_so_far:") == 0){
+                file_update << "\n" << "Sold_so_far: " << sold_so_far;
+                counter = 1;
+                is_old_data = true;
+            }
+            else if(is_update_product == true && x.compare("profit:") == 0){
+                file_update << "\n" << "profit: " << profit;
                 counter = 1;
                 is_update_product = false;
                 is_old_data = true;
