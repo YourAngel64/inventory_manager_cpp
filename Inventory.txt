@@ -2,7 +2,7 @@ Name: mario_ds
 Year: 2006 
 Company: Nintendo 
 Console: DS 
-Quantity: 6 
+Quantity: 5 
 Cost_of_purchase: 19.99 
 Cost_of_selling: 10 
 Sold_so_far: 0 

@@ -235,6 +235,7 @@ void sell_print_information(){
     file.close();
 }
 
+//Whenever object is sold, it will substract to quantity
 void sell_object(int amount){
     fstream file, file_update; //File var
     int counter = 0, old_amount = 0; //int vars
@@ -275,7 +276,10 @@ void sell_object(int amount){
     x = "";
     old_amount -= amount;
     
-    
+    if(old_amount < 0){
+        cout << "To sell such quantity is not possible. Not enough" << endl;
+        exit(1);
+    }
 
     while(file_update){
         file >> x;
