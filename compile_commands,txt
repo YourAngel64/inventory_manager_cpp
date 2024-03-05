@@ -1,2 +1,2 @@
-g++ -o ola.exe main.cpp main.h
-ola.exe
+g++ -o inventory_m.exe main.cpp main.h
+inventory_m.exe

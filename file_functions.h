@@ -17,6 +17,7 @@ using std::fstream;
 
 
 /*
+std::fstream use_file
 Closes file and then it re-opens it again.
 1st arg: file_name - file of the name that you want to use
 2nd arg: mode- "read" for "std::ios::in" and "write" for "std::ios::out"
@@ -41,6 +42,7 @@ fstream use_file(string file_name, string mode){
 }
 
 /*
+int get_data
 Will get data from a specific area of the product
 1st arg: fstream file- file in which all the products are located. Normally will be "Inventory.txt"
 2nd arg: string name_of_product - name of the product that is being located. pruchased_product.name
@@ -77,15 +79,16 @@ int get_data(fstream file, string name_of_product, string area_of_data){
 }
 
 /*
+void update_data
 Updates data on the file my moving everything to a temporaly file and then moving everything back
 to the original file. It does both because its easier like this lmao
 1st arg: fstream file - Base file
-2nd arg: fstream file_update - temporary file to update the files
-3rd arg: string product_name - name of the product in which we are going to perform the action to
-4th arg: string area - area of the product in whcih we are going to change EX: "Quantity:"
-5th arg: int new_data - new data that is going to be replaced by
+2nd arg: string product_name - name of the product in which we are going to perform the action to
+3rd arg: string area - area of the product in whcih we are going to change EX: "Quantity:"
+4th arg: int new_data - new data that is going to be replaced by
 */
-void update_data(fstream file, fstream file_update, string product_name, string area, int new_data){
+void update_data(fstream file, string product_name, string area, int new_data){
+    fstream file_update = use_file("Inventory_fast.txt", "write");
     string x, repeated_data_check;
     int counter = 0;
     bool is_update_product = false, is_old_data = false;
@@ -166,6 +169,10 @@ void update_data(fstream file, fstream file_update, string product_name, string 
     file.close();
 }
 
+/*
+Will return bool true if item is found in the inventory. False if it's not found
+1st arg- string product_name - name of the product is being looked in the inventory
+*/
 bool item_exists(string product_name){
     fstream file = use_file("Inventory.txt", "read");
     string x;
@@ -182,6 +189,10 @@ bool item_exists(string product_name){
     return item_exists_bool;
 }
 
+/*
+void print_one - will print to the console all the details of 1 especific object on the inventory
+1st arg- string product_name - name of the product of which the information is going to be printed
+*/
 void print_one(string product_name){
     fstream file;
     string x;
@@ -222,6 +233,10 @@ void print_one(string product_name){
     file.close();
 }
 
+/*
+void print_all - prints everything on the inventory
+no args
+*/
 void print_all(){
     fstream file = use_file("Inventory.txt", "read");
     int counter = 0, number_of_item = 1;

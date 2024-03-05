@@ -64,28 +64,36 @@ Extra details:
 
 
 int main(){
-    int* choice = option();
-    
-    //Check user input if is 1 or 2 or 3. If input is not valid then program is gonna close
-    if(*choice == 1 || *choice == 2 || *choice == 3){}
-    else{exit(1);}
 
-    //Depending of the choise of the user is gonna call the correct function
-    switch(*choice){
-        case 1:
-            purchase();
+    while(true){
+        int* choice = option();
+        
+        //Check user input if is 1 or 2 or 3. If input is not valid then program is gonna close
+        if(*choice == 1 || *choice == 2 || *choice == 3 || *choice == 4){}
+        else{exit(1);}
+
+        //Depending of the choise of the user is gonna call the correct function
+        switch(*choice){
+            case 1:
+                purchase();
+                break;
+            case 2:
+                sell();
+                break;
+            case 3:
+                check();
+                break;
+            case 4:
+                break;
+        }
+        
+        if(*choice == 4){
             break;
-        case 2:
-            sell();
-            break;
-        case 3:
-            check();
-            break;
+        }
+        
+        delete choice;
+        choice = NULL;
     }
-
-
-    delete choice;
-    choice = NULL;
 
     return 0;
 }

@@ -37,10 +37,12 @@ product purchase_product; //global obj created from product class that is being 
 int* option(){
     int* choice = new int;
 
+    cout << "\n" << endl;
     cout << "Please select the action you want to perform:" << endl;
     cout << "1)Purchase item and save it to inventory" << endl;
     cout << "2)Sell item from available inventory" << endl;
     cout << "3)Check Inventory information" << endl;
+    cout << "4)Exit program" << endl;
     cin >> *choice;
 
     return choice;
@@ -93,9 +95,9 @@ void sell_object(int amount){
         exit(1);
     }
 
-    update_data(use_file("Inventory.txt", "read"), use_file("Inventory_fast.txt", "write"), purchase_product.name , "Quantity:", old_amount);
-    update_data(use_file("Inventory.txt", "read"), use_file("Inventory_fast.txt", "write"), purchase_product.name , "Sold_so_far:", sold_so_far);
-    update_data(use_file("Inventory.txt", "read"), use_file("Inventory_fast.txt", "write"), purchase_product.name , "profit:", profit);
+    update_data(use_file("Inventory.txt", "read"), purchase_product.name , "Quantity:", old_amount);
+    update_data(use_file("Inventory.txt", "read"), purchase_product.name , "Sold_so_far:", sold_so_far);
+    update_data(use_file("Inventory.txt", "read"), purchase_product.name , "profit:", profit);
 
 }
 //Now it is time for the functions that the main function call:
@@ -137,7 +139,7 @@ void purchase(){
                 cout << "Invalid new amount. Please input a number" << endl;
             }
             
-            update_data(use_file("Inventory.txt", "read"), use_file("Inventory_fast.txt", "write"), purchase_product.name , "Quantity:", amount_int);
+            update_data(use_file("Inventory.txt", "read"), purchase_product.name , "Quantity:", amount_int);
             exit(0);
         }
         else if(x.compare("no") == 0){
