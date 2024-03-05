@@ -1,0 +1,10 @@
+Name: ssbu 
+Year: 2018 
+Company: nintendo 
+Console: switch 
+Quantity: 10 
+Cost_of_purchase: 69 
+Cost_of_selling: 99 
+Sold_so_far: 90 
+profit: 8910 
+0 
