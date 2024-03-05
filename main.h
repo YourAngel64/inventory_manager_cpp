@@ -51,7 +51,7 @@ int* option(){
 //function that deals with saving and reading inventory items
 void inventory_file(){
     fstream file;
-    file = use_file("Inventory.txt", "write");
+    file.open("Inventory.txt", std::ios::app);
 
     file << "\n";
     file << "Name: " << purchase_product.name << endl;
